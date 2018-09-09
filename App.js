@@ -1,5 +1,5 @@
 import React from "react"
-import {StyleSheet, Text, View} from "react-native"
+import {StyleSheet, Text, View, ScrollView} from "react-native"
 import moment from 'moment'
 
 const DATA = {
@@ -7,12 +7,12 @@ const DATA = {
     laps: [1234, 234, 6542, 3453534]
 }
 
-function Timer({interval}) {
+function Timer({interval, style}) {
     const duration = moment.duration(interval)
     const centiseconds = Math.floor(duration.milliseconds() / 10)
 
     return (
-        <Text style={styles.timer}>
+        <Text style={style}>
             {duration.minutes()}:{duration.seconds()},{centiseconds}
         </Text>
     )
@@ -37,15 +37,37 @@ function ButtonRow({children}) {
     )
 }
 
+function Lap({number, interval}) {
+    return (
+        <View style={styles.lap}>
+            <Text style={styles.lapText}>Lap {number}</Text>
+            <Timer style={styles.lapText} interval={interval}/>
+        </View>
+    )
+}
+
+function LabsTable({laps}) {
+    return (
+        <ScrollView style={styles.scrollView}>
+            {laps.map((lap, index) => (
+                <Lap number={laps.length - index}
+                     key={laps.length - index}
+                     interval={lap}/>
+            ))}
+        </ScrollView>
+    )
+}
+
 export default class App extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Timer interval={DATA.timer}/>
+                <Timer interval={DATA.timer} style={styles.timer}/>
                 <ButtonRow>
                     <RoundButton title='Start' color='#50D167' background='#1B361F'/>
                     <RoundButton title='Reset' color='#FFFFFF' background='#3D3D3D'/>
                 </ButtonRow>
+                <LabsTable laps={DATA.laps}></LabsTable>
             </View>
         )
     }
@@ -86,6 +108,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignSelf: "stretch",
         justifyContent: "space-between",
-        marginTop: 80
+        marginTop: 80,
+        marginBottom: 30
+    },
+    lapText: {
+        color: "#FFFFFF",
+        fontSize: 18,
+        borderColor: "#151515",
+        borderTopWidth: 1,
+        paddingVertical: 10
+    },
+    lap: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    scrollView: {
+        alignSelf: "stretch"
     }
 })
