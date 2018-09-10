@@ -18,7 +18,6 @@ function Timer({interval, style}) {
     )
 }
 
-
 function RoundButton({title, color, background}) {
     return (
         <View style={[styles.button, {backgroundColor: background}]}>
@@ -37,7 +36,23 @@ function ButtonRow({children}) {
     )
 }
 
-function Lap({number, interval}) {
+function Lap({number, interval, fastest, slowest}) {
+    const lapStyle = [
+        styles.lapText,
+        fastest && styles.fastest, // if fastest property is true styles.fastest will be set and the green color will be applied
+        slowest && styles.slowest
+    ]
+
+    return (
+        <View style={styles.lap}>
+            <Text style={lapStyle}>Lap {number}</Text>
+            <Timer style={lapStyle} interval={interval}/>
+        </View>
+    )
+}
+
+
+function Lapss({number, interval}) {
     return (
         <View style={styles.lap}>
             <Text style={styles.lapText}>Lap {number}</Text>
@@ -46,13 +61,27 @@ function Lap({number, interval}) {
     )
 }
 
+
 function LabsTable({laps}) {
+    const finishedLaps = laps.slice(1) // remove current lap from list
+    let min = Number.MAX_SAFE_INTEGER
+    let max = Number.MIN_SAFE_INTEGER
+    if (finishedLaps.length > 2) {
+        finishedLaps.forEach(lap => {
+            if (lap < min) min = lap
+            if (lap > max) max = lap
+        })
+    }
     return (
         <ScrollView style={styles.scrollView}>
             {laps.map((lap, index) => (
-                <Lap number={laps.length - index}
-                     key={laps.length - index}
-                     interval={lap}/>
+                <Lap
+                    number={laps.length - index}
+                    key={laps.length - index}
+                    interval={lap}
+                    slowest={lap === max}
+                    fastest={lap === min}
+                />
             ))}
         </ScrollView>
     )
@@ -124,5 +153,11 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         alignSelf: "stretch"
+    },
+    fastest: {
+        color: "#4BC05F"
+    },
+    slowest: {
+        color: "#CC3531"
     }
 })
