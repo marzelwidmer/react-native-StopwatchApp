@@ -1,5 +1,18 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
-  }
+    "name": "KeepCalm App",
+    "sdkVersion": "27.0.0",
+    "icon": "./icon.png",
+    "description": "KeepCalm App",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "ios": {
+      "bundleIdentifier": "ch.keepcalm.app"
+    },
+    "android": {
+      "package": "ch.keepcalm.app"
+    }
+  },
+  "name": "Stopwatch",
+  "displayName": "KeepCalm App"
 }
